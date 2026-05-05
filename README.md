@@ -1,29 +1,23 @@
 # Prime Index
 
-The best steakhouses in Chicago, ranked by what actually matters.
+  A steakhouse aggregator that ranks restaurants on three pillars instead of one blended star rating: **Quality & Value**, **Service**, and **Ambiance**.
 
-This is the MVP. See `prime_index_spec.md` for the full technical spec and `docs/methodology.md` for the public-facing scoring methodology.
+  ## Status
 
-## Layout
+  In active development. MVP launches with 25 Chicago steakhouses, scored from Google Places reviews + (pending) Reddit local sentiment.
 
-- `api/` — FastAPI backend (Python 3.12)
-- `web/` — Next.js 15 frontend (added at build step 11)
-- `data/` — Seed CSVs (e.g. `chicago_seed.csv`)
-- `docs/` — Methodology and other prose
-- `.github/workflows/` — CI + nightly cron (added at build step 9/17)
+  ## Why three pillars?
 
-## Local development
+  A 4.5-star rating doesn't tell you *why* a restaurant is good. Prime Index decomposes the score so users can see whether a place earned its rating from the food, the service, or the ambiance — and adjust the weighting to match what they personally care about.
 
-```bash
-cd api
-python -m venv .venv
-.venv\Scripts\activate          # Windows
-pip install -e .
-cp ../.env.example ../.env       # then edit
-alembic upgrade head             # create local SQLite DB
-uvicorn app.main:app --reload    # serves on http://localhost:8000
-```
+  ## Methodology
 
-## Status
+  Each review is sentence-classified by an LLM into one of four pillars (`quality`, `service`, `ambiance`, `other`) with a sentiment score in [-1, 1]. Pillar scores are computed with time-decay weighting (recent reviews count more). The composite Prime Score defaults to 40/30/30 weighting but is user-adjustable in the UI.
 
-Built sequentially per `prime_index_spec.md` §13. See git history for current step.
+  ## Tech
+
+  Python (FastAPI), SQLAlchemy, Anthropic Claude (classifier), Next.js + Tailwind frontend.
+
+  ---
+
+  Built by [@mutindaaa](https://github.com/mutindaaa). UIUC '29.
