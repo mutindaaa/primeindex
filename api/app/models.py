@@ -112,6 +112,27 @@ class Score(Base):
     ambiance_score: Mapped[float | None] = mapped_column(Float, nullable=True)
     prime_score: Mapped[float | None] = mapped_column(Float, nullable=True)
 
+    # Raw, pre-shrinkage, pre-penalty scores. Retained for debugging and v1.1 tuning.
+    raw_quality_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    raw_service_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    raw_ambiance_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+
+    # Per-pillar sentence counts. Surfaced in the API so the UI can show
+    # "based on N sentences" subscripts on thin pillar scores.
+    quality_n_sentences: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    service_n_sentences: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    ambiance_n_sentences: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    # Snapshot of restaurants.google_review_count at scoring time, so the API can
+    # surface "based on N total Google ratings" without re-querying restaurants.
+    google_review_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    # Volume-aware shrinkage debug fields. effective_k is the K actually used in
+    # this restaurant's pillar shrinkage; confidence_factor in [0, 1] is the
+    # log-volume signal driving K_HIGH -> K_LOW interpolation.
+    effective_k: Mapped[float | None] = mapped_column(Float, nullable=True)
+    confidence_factor: Mapped[float | None] = mapped_column(Float, nullable=True)
+
     google_review_count_used: Mapped[int | None] = mapped_column(Integer, nullable=True)
     reddit_mention_count_used: Mapped[int | None] = mapped_column(Integer, nullable=True)
     date_range_start: Mapped[date | None] = mapped_column(Date, nullable=True)

@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.logging_setup import configure_logging, get_logger
+from app.routes import cities, restaurants
 
 configure_logging()
 log = get_logger(__name__)
@@ -16,6 +17,9 @@ app.add_middleware(
     allow_methods=["GET"],
     allow_headers=["*"],
 )
+
+app.include_router(cities.router)
+app.include_router(restaurants.router)
 
 
 @app.get("/api/health")
