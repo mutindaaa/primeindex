@@ -12,6 +12,15 @@ dependencies = [
     "pydantic-settings>=2.6",
     "python-dotenv>=1.0",
     "httpx>=0.27",
+    # Postgres driver. Required in any environment that points DATABASE_URL at
+    # Postgres (Supabase in prod, plus local migrations against Supabase). Local
+    # dev with sqlite:/// URLs doesn't need it but importing it as a base dep
+    # avoids surprise ImportErrors at startup.
+    "psycopg2-binary>=2.9",
+    # Anthropic SDK — used by the classifier and the score-summarizer. Promoted
+    # from optional to base because the nightly orchestrator and the scoring
+    # path on the running API both import it.
+    "anthropic>=0.39",
 ]
 
 [project.optional-dependencies]
